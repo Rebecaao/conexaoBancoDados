@@ -34,6 +34,12 @@ function conexaoMysql()
 
 }
 
+//fecha a conexao com o bd
+function fecharConexaoMysql($conexao)
+{
+    mysqli_close($conexao);
+}
+
 /**existem 3 formas de criar uma conexao com banco de dados Mysql
  * 
  *  mysql_connect()- versao antiga do php de fazer a coexao com bd (nao oferece perfomance de segurança)
