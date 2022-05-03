@@ -1,10 +1,17 @@
 <?php
+
+    require_once('modulo/config.php');
  
  
 //essa varievel foi criada para diferenciar no action do formulario
 //qual acao devria ser levada para router (insert ou editar).
 //nas condicoes abaixo, mudamoso action dessa variavel para a acao de editar
 $form = (string) "router.php?component=contatos&action=inserir";
+
+//variavel para carregar o nome da foto no bd
+$foto = (string) null;
+
+
 //valida se a utilizacao de variaveis de sessao esta ativa no servidor
 if(session_status()){
         //valida se a variaver de sessao dadoscontatos
@@ -17,9 +24,10 @@ if(session_status()){
         $celular = $_SESSION['dadosContato']['celular'];
         $email = $_SESSION['dadosContato']['email'];
         $obs = $_SESSION['dadosContato']['obs'];
+        $foto = $_SESSION['dadosContato']['foto'];
  
         //mudamos a acao do form  para editar o registro no click do botao salvar 
-        $form = "router.php?component=contatos&action=atualizar&id=".$id;
+        $form = "router.php?component=contatos&action=atualizar&id=".$id."&foto=".$foto;
  
         //destroi uma variavel da memoria do servidor
         unset($_SESSION['dadosContato']);
@@ -84,6 +92,8 @@ if(session_status()){
                        <div class="cadastroEntradaDeDados">
                            <input type="email" name="txtEmail" value="<?=isset($email)?$email:null?>">
                        </div>
+
+
                    </div>
                    <div class="campos">
                        <div class="cadastroInformacoesPessoais">
@@ -100,6 +110,10 @@ if(session_status()){
                        <div class="cadastroEntradaDeDados">
                            <textarea name="txtObs" cols="50" rows="7"><?=isset($obs)?$obs:null?></textarea>
                        </div>
+                   </div>
+                   
+                   <div class="campos">
+                        <img src="<?=DIRETORIO_FILE_UPLOAD.$foto?>" alt="">
                    </div>
                    
                    <div class="enviar">
@@ -121,7 +135,9 @@ if(session_status()){
                    <td class="tblColunas destaque"> Nome </td>
                    <td class="tblColunas destaque"> Celular </td>
                    <td class="tblColunas destaque"> Email </td>
+                   <td class="tblColunas destaque"> Foto </td>
                    <td class="tblColunas destaque"> Opções </td>
+                   
                </tr>
                
                  <?php
@@ -134,11 +150,15 @@ if(session_status()){
                 
                     //estrutura de repetiçao para retornar os dados do array e printarna tela
                     foreach($listContatos as $item){
+
+                        //variavel para carregar a foto que veio do bd
+                        $foto = $item['foto'];
                 ?>
                    <tr id="tblLinhas">
                        <td class="tblColunas registros"><?=$item['nome']?></td>
                        <td class="tblColunas registros"><?=$item['celular']?></td>
                        <td class="tblColunas registros"><?=$item['email']?></td>
+                       <td class="tblColunas registros"><img src="<?=DIRETORIO_FILE_UPLOAD.$foto?>" class="foto"></td>
                    
                        <td class="tblColunas registros">
  
@@ -146,7 +166,7 @@ if(session_status()){
                                    <img src="img/edit.png" alt="Editar" title="Editar" class="editar">
                                </a>
                                
-                               <a onclick="return confirm('Deseja realmente excluir o contato <?=$item['nome']?>?')" href="router.php?component=contatos&action=deletar&id=<?=$item['id']?>">
+                               <a onclick="return confirm('Deseja realmente excluir o contato <?=$item['nome']?>?')" href="router.php?component=contatos&action=deletar&id=<?=$item['id']?>&foto=<?=$foto?>">
                                    <img src="img/trash.png" alt="Excluir" title="Excluir" class="excluir" >
                                </a>
  

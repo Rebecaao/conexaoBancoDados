@@ -63,9 +63,22 @@ $component = (string) null;
 
                 }elseif($action == 'DELETAR')
                 {
-                    $idContato = $_GET['id'];    
 
-                    $resposta = excluirContato($idContato);
+                    //recebe o id do registro que devera ser excluido
+                    //que foi enviado pela url no link da imagem
+                    //do excluir que foi acionado na index
+                    $idContato = $_GET['id'];    
+                    $foto = $_GET['foto'];  
+
+                    //criando array para encaminhar os valores do id e da foto para a controller
+                    $arrayDados = array (
+                        "id" => $idContato,
+                        "foto" => $foto  
+                    );
+
+                    //chama a funcao excluir
+                    $resposta = excluirContato($arrayDados);
+
 
                     if(is_bool($resposta))
                     {
@@ -104,12 +117,22 @@ $component = (string) null;
                 elseif($action ==   'ATUALIZAR')
                 {
 
-                    //recebe 
+                    //recebe o id que foi encaminhado no action do form pela url
                     $idContato = $_GET['id'];
+
+                    //recebe nome da fotp que foi enviada pelo get do form
+                    $foto = $_GET['foto'];
+
+                    //craindo um array contendo o id e o nome da foto para enviar a controller
+                    $arrayDados = array(
+                        "id" => $idContato,
+                        "foto" => $foto,
+                        "file" => $_FILES
+                    );
 
                     
                     //chama a funcao de editar na controller
-                    $resposta = atualizarContato($_POST, $idContato);
+                    $resposta = atualizarContato($_POST, $arrayDados);
                     //valida o tipo de dados que a controller retornou
                     if(is_bool($resposta))//se for booleano
                     { 

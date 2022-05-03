@@ -22,19 +22,20 @@ function insertContato($dadosContato)
          telefone,
          celular,
          email,
-         obs)
+         obs,
+         foto)
     values
          ('".$dadosContato['nome']."',
          '".$dadosContato['telefone']."',
          '".$dadosContato['celular']."',
          '".$dadosContato['email']."',
-         '".$dadosContato['obs']."');";
+         '".$dadosContato['obs']."',
+        '".$dadosContato['foto']."');";
 
          //executa o script no bd
          //validacao para identificar se o script esta certo
          if(mysqli_query($conexao,$sql)){
            //validacao para verificae se uma linha foi acrescentada no DB
-           
             if(mysqli_affected_rows($conexao))
                 $statusResposta = true;
             else
@@ -62,8 +63,9 @@ function upDateContato($dadosContato)
          telefone = '".$dadosContato['telefone']."',
          celular = '".$dadosContato['celular']."',
          email = '".$dadosContato['email']."',
-         obs= '".$dadosContato['obs']."'
-
+         obs= '".$dadosContato['obs']."',
+         foto= '".$dadosContato['foto']."'
+        
          where idcontato = ".$dadosContato['id'];
   
         
@@ -115,7 +117,8 @@ function selectAllContato()
                 "telefone" => $rsDAdos['telefone'],
                 "celular" => $rsDAdos['celular'],
                 "email" => $rsDAdos['email'],
-                "obs" => $rsDAdos['obs']
+                "obs" => $rsDAdos['obs'],
+                "foto" => $rsDAdos['foto']
             );
             $cont++;
         }
@@ -180,7 +183,9 @@ function selectByIdContato($id){
                 "telefone" => $rsDAdos['telefone'],
                 "celular" => $rsDAdos['celular'],
                 "email" => $rsDAdos['email'],
-                "obs" => $rsDAdos['obs']
+                "obs" => $rsDAdos['obs'],
+                //editar foto- primeiro passo
+                "foto" => $rsDAdos['foto']
             );
         }
         
