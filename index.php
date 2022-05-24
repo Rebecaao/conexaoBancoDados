@@ -11,6 +11,9 @@ $form = (string) "router.php?component=contatos&action=inserir";
 //variavel para carregar o nome da foto no bd
 $foto = (string) null;
 
+//variavel para ser utilizada ao carregar 
+$idestado = (string) null;
+
 
 //valida se a utilizacao de variaveis de sessao esta ativa no servidor
 if(session_status()){
@@ -25,6 +28,7 @@ if(session_status()){
         $email = $_SESSION['dadosContato']['email'];
         $obs = $_SESSION['dadosContato']['obs'];
         $foto = $_SESSION['dadosContato']['foto'];
+        $idestado = $_SESSION['dadosContato']['idestado'];
  
         //mudamos a acao do form  para editar o registro no click do botao salvar 
         $form = "router.php?component=contatos&action=atualizar&id=".$id."&foto=".$foto;
@@ -66,15 +70,41 @@ if(session_status()){
                            <!-- isset($nome)?$nome:null - if ternario  -->
                        </div>
                    </div>
-                                    
+                  
                    <div class="campos">
                        <div class="cadastroInformacoesPessoais">
-                           <label> Telefone: </label>
+                           <label> Estado </label>
                        </div>
                        <div class="cadastroEntradaDeDados">
-                           <input type="tel" name="txtTelefone" value="<?=isset($telefone)?$telefone:null?>">
+                           <select name="sltEstado" id="">
+                                <option value="">Selecione um item</option>
+                                <?php
+                                    require_once('controller/controllerEstados.php');
+
+                                    //chama a funcao para carregar todos os estados
+                                    $listEstados = listarEstado();
+                                    foreach($listEstados as $item)
+                                    {
+                                        ?>
+                                                <option <?=$idestado==$item['idestado']?'selected':null ?> value="<?=$item['idestado']?>"><?=$item['nome']?></option>
+                                        <?php
+                                    }
+                                ?>
+                           </select>
                        </div>
                    </div>
+
+                   <div class="campos">
+                       <div class="cadastroInformacoesPessoais">
+                           <label> Telefone </label>
+                       </div>
+                       <div class="cadastroEntradaDeDados">
+                           <input type="text" name="txtNome" value="<?=isset($telefone)?$telefone:null?>" placeholder="Digite seu Nome" maxlength="100">
+                           <!-- isset($nome)?$nome:null - if ternario  -->
+                       </div>
+                   </div>
+                                    
+               
                    <div class="campos">
                        <div class="cadastroInformacoesPessoais">
                            <label> Celular: </label>
@@ -92,6 +122,8 @@ if(session_status()){
                        <div class="cadastroEntradaDeDados">
                            <input type="email" name="txtEmail" value="<?=isset($email)?$email:null?>">
                        </div>
+
+                    
 
 
                    </div>
@@ -146,7 +178,8 @@ if(session_status()){
                     require_once('controller/controllerContatos.php');
                     
                     //chama a funçao que vai retornar os dados de contatos
-                    $listContatos = listarContato();
+                    if($listContatos = listarContato())
+                    {
                 
                     //estrutura de repetiçao para retornar os dados do array e printarna tela
                     foreach($listContatos as $item){
@@ -175,6 +208,7 @@ if(session_status()){
                    </tr>
                <?php
                    }
+                }
                ?>
            </table>
        </div>

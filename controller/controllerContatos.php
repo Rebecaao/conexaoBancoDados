@@ -8,6 +8,9 @@
  *******************************************
  */
 
+ //import do arquivo de configuracao dos projetos
+ require_once(SRC.'modulo/config.php');
+ 
  //funcao para escrever dados da view e  encaminhar para a model (inserir)
  function inserirContato ($dadosContato, $file)
  {
@@ -18,7 +21,7 @@
     {
       //validacao de caixa vazia dos elementos nome, email, celular, pois sao campos
       //obrigatorios no BD
-      if(!empty($dadosContato['txtNome']) && !empty($dadosContato['txtCelular'])&& !empty($dadosContato['txtEmail']))
+      if(!empty($dadosContato['txtNome']) && !empty($dadosContato['txtCelular'])&& !empty($dadosContato['txtEmail'])&& !empty($dadosContato['sltEstado']))
       {
 
         //validacao para verificar se chegou um arquivo para upload
@@ -50,7 +53,8 @@
               'celular' => $dadosContato['txtCelular'],
               'email' => $dadosContato['txtEmail'],
               'obs' => $dadosContato['txtObs'],
-              'foto' => $nomeFoto
+              'foto' => $nomeFoto,
+              'idestado' => $dadosContato['sltEstado']
             );
 
             //import do arquivo de modelagem para manipular o BD
@@ -72,7 +76,11 @@
 
   //funcao para escrever dados da view e  encaminhar para a model (atualizar)
   function atualizarContato($dadosContato, $arrayDados)
+
+ 
   { 
+
+    $statusUpload = (boolean) false;
       //recebe o id enviado pelo array dados
       $id = $arrayDados['id'];
 
@@ -102,9 +110,9 @@
               
               //chama a funcao upload para enviar a nova foto para o servidor
               $novaFoto = uploadFile($file['fleFoto']);
+              $statusUpload = true;
 
-          }else
-          {
+          }else{
             //permanece a mesma foto no bd
             $novaFoto = $foto;
           }
@@ -121,7 +129,8 @@
                 'celular' => $dadosContato['txtCelular'],
                 'email' => $dadosContato['txtEmail'],
                 'obs' => $dadosContato['txtObs'],
-                'foto' => $nomeFoto
+                'foto' => $nomeFoto,
+                'idestado' => $dadosContato['sltEstado']
 
         
               );
@@ -133,7 +142,16 @@
 
               //chama a funçao que fara o insert no BD(esta funçao esta na model)
               if (upDateContato($arrayDados))
+              {
+
+               //validacao para verificar se sera necessario apagar a foto antiga 
+               //esta variavel foi ativada em true na linha 
+                if($statusUpload){
+                   //apaga a foto antiga da pasta do servidor
+                  unlink(DIRETORIO_FILE_UPLOAD.$foto); 
+                }
                 return true;
+              }
               else
                 return array('idErro' => 1,
                             'message' => 'não foi possivel atualizar os dados no Banco de Dados');
@@ -200,7 +218,7 @@
 function listarContato ()
  {
    //import do arquivo que vai buscar os dados do BD
-    require_once('model/bd/contato.php');
+    require_once(SRC.'model/bd/contato.php');
 
     //chama a funçao que vai buscar os dados no BD
     $dados = selectAllContato();
@@ -217,7 +235,7 @@ function listarContato ()
     if($id != 0 && !empty($id) && is_numeric($id))
     {
         //import do arquivo de contato
-        require_once('model/bd/contato.php');
+        require_once(SRC.'model/bd/contato.php');
 
 
         $dados = selectByIdContato($id);

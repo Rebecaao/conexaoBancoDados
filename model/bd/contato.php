@@ -23,14 +23,17 @@ function insertContato($dadosContato)
          celular,
          email,
          obs,
-         foto)
+         foto,
+         idestado)
     values
          ('".$dadosContato['nome']."',
          '".$dadosContato['telefone']."',
          '".$dadosContato['celular']."',
          '".$dadosContato['email']."',
          '".$dadosContato['obs']."',
-        '".$dadosContato['foto']."');";
+        '".$dadosContato['foto']."',
+        '".$dadosContato['idestado']."'
+    );";
 
          //executa o script no bd
          //validacao para identificar se o script esta certo
@@ -64,8 +67,8 @@ function upDateContato($dadosContato)
          celular = '".$dadosContato['celular']."',
          email = '".$dadosContato['email']."',
          obs= '".$dadosContato['obs']."',
-         foto= '".$dadosContato['foto']."'
-        
+         foto= '".$dadosContato['foto']."',
+         idestado = '".$dadosContato['idestado']."'
          where idcontato = ".$dadosContato['id'];
   
         
@@ -118,15 +121,18 @@ function selectAllContato()
                 "celular" => $rsDAdos['celular'],
                 "email" => $rsDAdos['email'],
                 "obs" => $rsDAdos['obs'],
-                "foto" => $rsDAdos['foto']
+                "foto" => $rsDAdos['foto'],
+                "idestado" => $rsDAdos['idestado']
             );
             $cont++;
         }
         
 
         fecharConexaoMysql($conexao);
-
-        return $arrayDados;
+        if(isset($arrayDados)) /**aaaaaaqui */
+            return $arrayDados;
+        else
+            return false;
     }
 }
 // criando funcao para deletar no BD
@@ -185,7 +191,8 @@ function selectByIdContato($id){
                 "email" => $rsDAdos['email'],
                 "obs" => $rsDAdos['obs'],
                 //editar foto- primeiro passo
-                "foto" => $rsDAdos['foto']
+                "foto" => $rsDAdos['foto'],
+                "idestado" => $rsDAdos['idestado']
             );
         }
         
