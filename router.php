@@ -32,15 +32,22 @@ $component = (string) null;
                 //validacao para identificar o tipo de açao que sserá realizada
                 if($action == 'INSERIR')
                 {
-                   
+                   //validação para tratar se a imagem existe na chegada dos dados do html
                     if(isset($_FILES) && !empty($_FILES))
                     {
+                        $arrayDados = array(
+                                            $_POST,
+                                            "file" => $_FILES
+                                            );
                         //chama a funçao de inserir na controler
-                        $resposta = inserirContato($_POST, $_FILES);
+                        $resposta = inserirContato($arrayDados);
                     }else{
-
+                        $arrayDados = array(
+                            $_POST,
+                            "file" => null
+                            );
                       //chama a funcao de inserir na controller
-                    $resposta = inserirContato($_POST, null);
+                        $resposta = inserirContato($arrayDados);
                     }
 
                     //valida o tipo de dados que a controller retornou
