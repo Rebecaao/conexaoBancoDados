@@ -134,12 +134,13 @@ $component = (string) null;
                     $arrayDados = array(
                         "id" => $idContato,
                         "foto" => $foto,
-                        "file" => $_FILES
+                        "file" => $_FILES,
+                        $_POST
                     );
 
                     
                     //chama a funcao de editar na controller
-                    $resposta = atualizarContato($_POST, $arrayDados);
+                    $resposta = atualizarContato($arrayDados);
                     //valida o tipo de dados que a controller retornou
                     if(is_bool($resposta))//se for booleano
                     { 

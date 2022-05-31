@@ -73,31 +73,29 @@
          return array('idErro' => 2,
                       'message' => 'Existem campos obrigatórios que nao foram preenchidos '); 
       }
-    }
+}
  
 
   //funcao para escrever dados da view e  encaminhar para a model (atualizar)
-  function atualizarContato($dadosContato, $arrayDados)
-
- 
+  function atualizarContato($dadosContato)
   { 
 
     $statusUpload = (boolean) false;
       //recebe o id enviado pelo array dados
-      $id = $arrayDados['id'];
+      $id = $dadosContato['id'];
 
       //Recebe a foto enviada pelo arrayDados (nome da foto ja existente no bd)
-      $foto = $arrayDados['foto'];
+      $foto = $dadosContato['foto'];
 
       //recebe o objeto de array referente a nova foto que ppodera ser enviada ao servidor
-      $file = $arrayDados['file'];
+      $file = $dadosContato['file'];
  
     // empty verifica seo objeto esta vazio
     if(!empty($dadosContato))
     {
       //validacao de caixa vazia dos elementos nome, email, celular, pois sao campos
       //obrigatorios no BD
-      if(!empty($dadosContato['txtNome']) && !empty($dadosContato['txtCelular'])&& !empty($dadosContato['txtEmail']))
+      if(!empty($dadosContato[0]['nome']) && !empty($dadosContato[0]['celular'])&& !empty($dadosContato[0]['email']))
       {
 
         //validacao para garantir que  o id é valido
@@ -105,13 +103,13 @@
         {
 
           //validacao para identificar se sera enviado ao servidor uma nova foto
-          if($file['fleFoto']['nome'] != null)
+          if($file['foto']['name'] != null)
           {
                //import da funcao pload
-              require_once('modulo/upload.php');
+              require_once(SRC.'modulo/upload.php');
               
               //chama a funcao upload para enviar a nova foto para o servidor
-              $novaFoto = uploadFile($file['fleFoto']);
+              $novaFoto = uploadFile($file['foto']);
               $statusUpload = true;
 
           }else{
@@ -126,13 +124,13 @@
               $arrayDados= array(
 
                 'id'  =>  $id,
-                'nome' => $dadosContato['txtNome'],
-                'telefone' => $dadosContato['txtTelefone'],
-                'celular' => $dadosContato['txtCelular'],
-                'email' => $dadosContato['txtEmail'],
-                'obs' => $dadosContato['txtObs'],
-                'foto' => $nomeFoto,
-                'idestado' => $dadosContato['sltEstado']
+                'nome' => $dadosContato[0]['nome'],
+                'telefone' => $dadosContato[0]['telefone'],
+                'celular' => $dadosContato[0]['celular'],
+                'email' => $dadosContato[0]['email'],
+                'obs' => $dadosContato[0]['obs'],
+                'foto' => $novaFoto,
+                'idestado' => $dadosContato[0]['estado']
 
         
               );
@@ -140,7 +138,7 @@
              
 
               //import do arquivo de modelagem para manipular o BD
-              require_once('./model/bd/contato.php');
+              require_once(SRC.'./model/bd/contato.php');
 
               //chama a funçao que fara o insert no BD(esta funçao esta na model)
               if (upDateContato($arrayDados))
@@ -150,7 +148,7 @@
                //esta variavel foi ativada em true na linha 
                 if($statusUpload){
                    //apaga a foto antiga da pasta do servidor
-                  unlink(DIRETORIO_FILE_UPLOAD.$foto); 
+                  unlink(SRC.DIRETORIO_FILE_UPLOAD.$foto); 
                 }
                 return true;
               }
